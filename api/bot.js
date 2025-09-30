@@ -2,6 +2,7 @@ import TelegramBot from "node-telegram-bot-api";
 import express from "express";
 import serverless from "serverless-http";
 import { TOKEN } from "../env.js";
+import bodyParser from "body-parser";
 console.log("Bot is starting...");
 const bot = new TelegramBot(TOKEN, {
   webHook: true, // ✅ majuscule H
@@ -12,12 +13,12 @@ bot.on("webhook_error", (error) => {
 });
 
 const app = express();
-app.use(express.json({ limit: "10mb" }));
+app.use(express.json());
 
-// pour urlencoded
-app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+app.use(bodyParser.json())
 // ✅ Endpoint qui reçoit les updates Telegram
 app.post(`/api/bot${TOKEN}`, (req, res) => {
+  console.log("Hi receive update ! ")
   bot.processUpdate(req.body);
   res.sendStatus(200);
 }); 
