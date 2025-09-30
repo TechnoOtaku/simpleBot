@@ -1,4 +1,4 @@
-import TelegramBot from "node-telegram-bot"
+import TelegramBot from "node-telegram-bot-api"
 import express from "express"
 import {config} from "dotenv"
 import serverless from "serverless-http"
