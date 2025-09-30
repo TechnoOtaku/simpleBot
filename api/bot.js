@@ -19,8 +19,10 @@ bot.on("webhook_error", (error) => {
 });
 
 const app = express();
-app.use(express.json());
+app.use(express.json({ limit: "10mb" }));
 
+// pour urlencoded
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 // ✅ Endpoint qui reçoit les updates Telegram
 app.post(`/api/bot${process.env.TOKEN}`, (req, res) => {
   bot.processUpdate(req.body);
