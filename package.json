@@ -1,0 +1,14 @@
+{
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "vercel start",
+    "dev": "vercel dev"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "node-telegram-bot": "^0.1.9",
+    "serverless-http": "^4.0.0"
+  }
+}
