@@ -7,7 +7,6 @@ config();
 
 const bot = new TelegramBot(process.env.TOKEN, {
   webHook: true, // ✅ majuscule H
-  request: { timeout: 1 }
 });
 
 // ✅ Définir le webhook une seule fois au démarrage
