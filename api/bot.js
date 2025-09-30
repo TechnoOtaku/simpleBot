@@ -1,41 +1,42 @@
-import TelegramBot from "node-telegram-bot-api"
-import express from "express"
-import {config} from "dotenv"
-import serverless from "serverless-http"
-import bodyParser from "body-parser"
-config()
+import TelegramBot from "node-telegram-bot-api";
+import express from "express";
+import { config } from "dotenv";
+import serverless from "serverless-http";
+
+config();
+
 const bot = new TelegramBot(process.env.TOKEN, {
-    webhook: true,
-    request: {
-        timeout: 1,
-    }
-})
-bot.deleteWebHook().then(() => {
-    console.log("❌ Wenbhook deleted !")
-})
-bot.setWebHook(`${process.env.HOST}/bot${process.env.TOKEN}`).then(() => {
-    console.log("✅ webhook set")
-}).catch((error) => {
-    console.log("⚠️Error set wehbook: ",e.message)
-})
+  webHook: true, // ✅ majuscule H
+  request: { timeout: 1 }
+});
 
-bot.on('webhook_error',(error)=> {
-    console.log('Webhook error detected: ',error)
-})
-const app = express()
-app.use(express.json())
-app.use(bodyParser.json())
-app.use(express.urlencoded({extended: true}))
+// ✅ Définir le webhook une seule fois au démarrage
+bot.setWebHook(`${process.env.HOST}/api/bot${process.env.TOKEN}`)
+  .then(() => console.log("✅ Webhook set"))
+  .catch((error) => console.log("⚠️ Error setting webhook:", error.message));
 
-app.post(`/bot${process.env.TOKEN}`, (req, res) => {
-    bot.processUpdate(req.body)
-    res.sendStatus(200)
-})
+bot.on("webhook_error", (error) => {
+  console.log("Webhook error detected:", error);
+});
+
+const app = express();
+app.use(express.json());
+
+// ✅ Endpoint qui reçoit les updates Telegram
+app.post(`/api/bot${process.env.TOKEN}`, (req, res) => {
+  bot.processUpdate(req.body);
+  res.sendStatus(200);
+});
+
+// ✅ Petit endpoint test
 app.get("/", (req, res) => {
-    res.send("Hello World!")
-})
+  res.send("Hello World!");
+});
+
+// ✅ Exemple handler de commande
 bot.onText(/\/start/, async (msg) => {
-    await bot.sendMessage(msg.chat.id, "Welcome to the bot!")
-})
-export const handler = serverless(app)
-export default handler
+  await bot.sendMessage(msg.chat.id, "Welcome to the bot! 🚀");
+});
+
+export const handler = serverless(app);
+export default handler;
